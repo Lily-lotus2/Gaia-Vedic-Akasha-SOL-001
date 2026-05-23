@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { batchUpdate, initialState, validateState } from "@/lib/existon";
 import { logBatch, getLatestState, getLogStats } from "@/lib/logger";
+import { logExistonToSILOC } from "@/lib/existon-logger";
+import { logExistonComputation, logExistonValidation, logExistonLogged } from "@/lib/agent-activity-logger";
+import { createGenesisRecord, computeStateVectorHash } from "@/lib/verification";
 import type { StateVector } from "@/lib/existon";
 
 // In-memory state for the current session
 // Persists across API calls within the same server instance
 let state: StateVector | null = null;
+let existonIndex = 0;
+let firstRun = true;
 
 /**
  * Initialize state from log or create new initial state
@@ -22,6 +27,7 @@ async function ensureState(): Promise<StateVector> {
  * POST /api/batch
  * 
  * Process a batch of state transitions and log the results
+ * Automatically logs Existon to SILO C
  * 
  * Request body:
  * {
@@ -35,7 +41,8 @@ async function ensureState(): Promise<StateVector> {
  *   "t": number (timestamp),
  *   "batch": StateVector[],
  *   "count": number (batch length),
- *   "agent": string
+ *   "agent": string,
+ *   "existon_logged": number (Existon index)
  * }
  */
 export async function POST(req: Request) {
@@ -59,6 +66,16 @@ export async function POST(req: Request) {
       );
     }
 
+    // Log genesis Existon on first run
+    if (firstRun) {
+      await ensureState();
+      const genesisRecords = createGenesisRecord(state!);
+      await logExistonToSILOC(genesisRecords);
+      await logExistonLogged(0, genesisRecords.length);
+      firstRun = false;
+      existonIndex = 1;
+    }
+
     // Handle seed reset if provided
     if (seed !== undefined) {
       if (!Array.isArray(seed) || !validateState(seed)) {
@@ -80,8 +97,51 @@ export async function POST(req: Request) {
     // Update in-memory state
     state = finalState;
 
-    // Log batch to files
+    // Log computation
+    await logExistonComputation(existonIndex, state);
+
+    // Create Existon records for current state
+    const nodeHash = computeStateVectorHash(state);
+    const existonRecords = state.map((stateValue, i) => {
+      const crypto = require('crypto');
+      return {
+        k: existonIndex,
+        i,
+        state: stateValue,
+        hash: crypto.createHash('sha256').update(String(stateValue)).digest('hex'),
+        node_hash: nodeHash,
+        agent,
+        tier: 'unrestricted',
+        timestamp_ms: Date.now(),
+        verified: true,
+        neighborhood_sum: 0,
+        transition_rule_applied: 'batch_update',
+        previous_state: null,
+        coherence_score: 1.0,
+        drift_detected: false,
+        verification_chain: 'valid',
+      };
+    });
+
+    // Validate and log to SILO C
+    const allValid = existonRecords.every(r => r.verified);
+    await logExistonValidation(existonIndex, allValid, { records: existonRecords.length });
+
+    if (allValid) {
+      await logExistonToSILOC(existonRecords);
+      await logExistonLogged(existonIndex, existonRecords.length);
+    } else {
+      return NextResponse.json(
+        { error: "Existon validation failed. Not logged." },
+        { status: 400 }
+      );
+    }
+
+    // Legacy logging
     await logBatch(batch, agent);
+
+    const currentExistonIndex = existonIndex;
+    existonIndex++;
 
     // Return response
     return NextResponse.json(
@@ -90,13 +150,15 @@ export async function POST(req: Request) {
         batch,
         count: batch.length,
         agent,
+        existon_logged: currentExistonIndex,
+        message: `Batch processed. Existon k=${currentExistonIndex} logged to SILO C`,
       },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error in POST /api/batch:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: String(error) },
       { status: 500 }
     );
   }
@@ -112,7 +174,8 @@ export async function POST(req: Request) {
  *   "t": number (timestamp),
  *   "state": StateVector,
  *   "ready": boolean,
- *   "stats": { totalEntries, timeRange, agents }
+ *   "stats": { totalEntries, timeRange, agents },
+ *   "current_existon": number
  * }
  */
 export async function GET() {
@@ -126,6 +189,7 @@ export async function GET() {
         state: currentState,
         ready: true,
         stats,
+        current_existon: existonIndex - 1,
       },
       { status: 200 }
     );
