@@ -1,0 +1,41 @@
+{
+  "projectName": "gaia-vedic-akasha-sol-001",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "nodeVersion": "20.x",
+  "env": {
+    "GOOGLE_DRIVE_API_KEY": {
+      "description": "Google Drive API Key for SILO C integration",
+      "example": "YOUR_GOOGLE_DRIVE_API_KEY"
+    },
+    "GOOGLE_DRIVE_FOLDER_ID": {
+      "description": "Google Drive Folder ID for SILO-C-EXISTON-LOG",
+      "example": "YOUR_GOOGLE_DRIVE_FOLDER_ID"
+    },
+    "SILO_C_SYNC_INTERVAL_MS": {
+      "description": "SILO C synchronization interval in milliseconds",
+      "default": "100"
+    },
+    "EXISTON_UPDATE_FREQUENCY_HZ": {
+      "description": "Existon update frequency in Hz",
+      "default": "10"
+    }
+  },
+  "buildEnvironment": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["iad1"],
+  "public": true,
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    }
+  ]
+}
