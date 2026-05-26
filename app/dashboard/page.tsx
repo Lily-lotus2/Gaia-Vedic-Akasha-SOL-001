@@ -22,7 +22,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<
     'entropy' | 'correlation' | 'bottleneck' | 'ai'
   >('entropy');
-  const [analysisData, setAnalysisData] = useState(null);
+  const [analysisData, setAnalysisData] = useState<any>(null);
 
   // Generate random state vector for demo
   useEffect(() => {

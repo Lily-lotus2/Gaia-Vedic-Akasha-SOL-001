@@ -45,7 +45,7 @@ export function getCompleteSystemView(records: ExistonRecord[]): {
     unique_existons: uniqueExistons,
     agents,
     tiers,
-    drift_events,
-    latest_k,
+    drift_events: driftEvents,
+    latest_k: latestK,
   };
 }

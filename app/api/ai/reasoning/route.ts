@@ -62,7 +62,7 @@ Correlation Metrics:
 - Average Mutual Information: ${analysis.correlation_metrics.average_mutual_information?.toFixed(3)}
 
 Complexity:
-- Complexity Metric: ${analysis.complexity_metrics.complexity_metric?.toFixed(3)}
+- Complexity Metric: ${typeof analysis.complexity_metrics.complexity_metric === 'number' ? analysis.complexity_metrics.complexity_metric.toFixed(3) : analysis.complexity_metrics.complexity_metric}
 - System State: ${analysis.complexity_metrics.system_state_classification}
 
 Information Bottlenecks:
