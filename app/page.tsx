@@ -41,8 +41,6 @@ export default function HomePage() {
                   cursor: 'pointer',
                   transition: 'background 0.3s',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#00a8cc')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#00d4ff')}
               >
                 Open Dashboard →
               </a>
@@ -125,8 +123,6 @@ export default function HomePage() {
               fontSize: '1.125rem',
               transition: 'background 0.3s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = '#00a8cc')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = '#00d4ff')}
           >
             Open Dashboard →
           </a>
