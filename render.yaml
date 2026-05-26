@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: gaia-vedic-ollama
+    runtime: docker
+    plan: standard
+    
+    # Docker configuration
+    dockerfile: ./Dockerfile
+    dockerfilePath: ./Dockerfile
+    
+    # Port configuration
+    port: 11434
+    
+    # Environment variables
+    envVars:
+      - key: OLLAMA_MODELS
+        value: /root/.ollama/models
+      - key: OLLAMA_HOST
+        value: 0.0.0.0:11434
+      - key: OLLAMA_NUM_PARALLEL
+        value: "2"
+      - key: OLLAMA_NUM_THREAD
+        value: "8"
+    
+    # Build configuration
+    buildCommand: ""
+    startCommand: "ollama serve"
+    
+    # Resource configuration
+    # Render free tier: 0.5 CPU, 512 MB RAM
+    # Standard tier: 1 CPU, 2 GB RAM (recommended for Ollama)
+    
+    # Persistent disk for model caching
+    disk:
+      name: ollama-models
+      mountPath: /root/.ollama/models
+      sizeGB: 50
+    
+    # Auto-scaling
+    autoDeploy: true
+    
+    # Health check
+    healthCheckPath: /api/tags
+    healthCheckInterval: 30
+    
+    # Timeout settings
+    buildTimeout: 3600
+    startTimeout: 600
+
+# Deployment metadata
+metadata:
+  name: gaia-vedic-akasha-sol-001
+  description: Ollama backend with Deepseek-R1, Qwen2.5, Gemma 2
+  version: "1.0"
+  author: Lily Code
