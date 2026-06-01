@@ -1,148 +1,427 @@
+'use client';
+
+import { useState } from 'react';
+
 export default function HomePage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    businessName: '',
+    message: '',
+  });
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Integrate with backend lead capture
+    console.log('Form submitted:', formData);
+    alert('Thank you! We will contact you soon.');
+    setFormData({ name: '', email: '', businessName: '', message: '' });
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(to br, #0f0f0f, #1a1a2e, #16213e)' }}>
-      <header style={{ borderBottom: '1px solid rgba(0, 212, 255, 0.3)', background: 'rgba(31, 31, 31, 0.5)', backdropFilter: 'blur(10px)' }}>
-        <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '3rem 1.5rem' }}>
-          <h1 style={{ fontSize: '3rem', fontWeight: 'bold', color: '#00d4ff', marginBottom: '1rem' }}>
-            Existon 1.0
+    <div style={{ background: 'linear-gradient(to br, #0A0F2C, #0F1438)', color: '#FFFFFF', minHeight: '100vh' }}>
+      {/* Navigation */}
+      <nav style={{ borderBottom: '1px solid rgba(127, 255, 212, 0.3)', background: 'rgba(15, 20, 56, 0.7)', backdropFilter: 'blur(10px)', padding: '1.5rem 2rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#FFFFFF' }}>
+            Caramel Digital Studio
           </h1>
-          <p style={{ fontSize: '1.25rem', color: '#a0a0a0', maxWidth: '42rem' }}>
-            Information-Theoretic Analysis with AI Reasoning
-          </p>
-          <p style={{ fontSize: '0.875rem', color: '#808080', marginTop: '1rem' }}>
-            Gaia-Vedic-Akasha-SOL-001 • Lily Code Architecture
-          </p>
-        </div>
-      </header>
-
-      <main style={{ maxWidth: '80rem', margin: '0 auto', padding: '4rem 1.5rem' }}>
-        <div style={{ marginBottom: '5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '3rem', alignItems: 'center' }}>
-            <div>
-              <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#00ff00', marginBottom: '1.5rem' }}>
-                Doctoral-Level Analysis
-              </h2>
-              <p style={{ color: '#d0d0d0', marginBottom: '1rem', lineHeight: '1.6' }}>
-                Existon 1.0 combines deterministic state transitions with information-theoretic analysis to measure entropy dissipation, mutual information, and system complexity.
-              </p>
-              <p style={{ color: '#a0a0a0', marginBottom: '2rem', fontSize: '0.875rem' }}>
-                No API costs • Open-source AI models • Complete transparency • Lily Code compatible
-              </p>
-              <a
-                href="/dashboard"
-                style={{
-                  display: 'inline-block',
-                  padding: '0.75rem 2rem',
-                  background: '#00d4ff',
-                  color: '#000',
-                  fontWeight: 'bold',
-                  borderRadius: '0.5rem',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  transition: 'background 0.3s',
-                }}
-              >
-                Open Dashboard →
-              </a>
-            </div>
-
-            <div style={{ background: '#1a1a1a', borderRadius: '0.5rem', border: '1px solid rgba(0, 212, 255, 0.3)', padding: '2rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {[
-                  { icon: '📊', title: 'Entropy Analysis', desc: 'Shannon entropy, dissipation rate, complexity classification' },
-                  { icon: '🔗', title: 'Correlation Networks', desc: 'Mutual information, transfer entropy, correlation length' },
-                  { icon: '🎯', title: 'Information Bottlenecks', desc: 'Critical node identification, compression efficiency' },
-                  { icon: '🤖', title: 'AI Reasoning', desc: 'Deepseek-R1, Qwen2.5, Gemma 2 • Local inference' },
-                ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', gap: '1rem' }}>
-                    <div style={{ fontSize: '1.5rem' }}>{item.icon}</div>
-                    <div>
-                      <h3 style={{ fontWeight: 'bold', color: '#00d4ff' }}>{item.title}</h3>
-                      <p style={{ fontSize: '0.875rem', color: '#a0a0a0' }}>{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div style={{ display: 'flex', gap: '2rem' }}>
+            <button onClick={() => scrollToSection('services')} style={{ background: 'none', border: 'none', color: '#7FFFD4', cursor: 'pointer', fontSize: '1rem' }}>Services</button>
+            <button onClick={() => scrollToSection('portfolio')} style={{ background: 'none', border: 'none', color: '#7FFFD4', cursor: 'pointer', fontSize: '1rem' }}>Portfolio</button>
+            <button onClick={() => scrollToSection('contact')} style={{ background: 'none', border: 'none', color: '#7FFFD4', cursor: 'pointer', fontSize: '1rem' }}>Contact</button>
           </div>
         </div>
+      </nav>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '5rem' }}>
-          {[
-            { title: 'Zero API Costs', desc: 'All AI models run locally on Render. No OpenAI, Claude, or Anthropic charges.' },
-            { title: 'Complete Transparency', desc: 'Open-source code, open-source models, full control over your data and infrastructure.' },
-            { title: 'Production-Ready', desc: 'Deployed on Vercel + Render. Real-time analysis, auto-scaling, persistent storage.' },
-          ].map((item, idx) => (
-            <div key={idx} style={{ background: '#1a1a1a', borderRadius: '0.5rem', border: '1px solid #444', padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#00ff00', marginBottom: '1rem' }}>
-                {item.title}
-              </h3>
-              <p style={{ color: '#a0a0a0', fontSize: '0.875rem' }}>{item.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ background: '#1a1a1a', borderRadius: '0.5rem', border: '1px solid rgba(0, 212, 255, 0.3)', padding: '3rem', marginBottom: '5rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#00d4ff', marginBottom: '2rem' }}>
-            Architecture
+      {/* Hero Section */}
+      <section style={{ padding: '6rem 2rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(255, 0, 255, 0.05), rgba(0, 255, 255, 0.05))' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '3.5rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFFFFF' }}>
+            Your Business Deserves a Digital Presence That Feels Alive
           </h2>
+          <p style={{ fontSize: '1.5rem', marginBottom: '2rem', color: '#7FFFD4' }}>
+            We craft harmonically designed websites for local small businesses. R1750 upfront for Next.js branding and styling. Tiered monthly hosting from R89.
+          </p>
+          <button
+            onClick={() => scrollToSection('contact')}
+            style={{
+              backgroundColor: '#FF00FF',
+              color: '#0A0F2C',
+              padding: '1rem 2rem',
+              fontSize: '1.125rem',
+              fontWeight: 'bold',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'all 150ms ease-out',
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLButtonElement;
+              el.style.opacity = '0.9';
+              el.style.transform = 'scale(1.02)';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLButtonElement;
+              el.style.opacity = '1';
+              el.style.transform = 'scale(1)';
+            }}
+          >
+            Start Your Site Today
+          </button>
+        </div>
+      </section>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* Service Tiers Section */}
+      <section id="services" style={{ padding: '6rem 2rem', background: '#0F1438' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h3 style={{ fontSize: '2.8rem', marginBottom: '3rem', textAlign: 'center', color: '#FFFFFF' }}>
+            Fibonacci-Scaled Pricing for Everyone
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
             {[
-              { icon: '🌐', title: 'Frontend (Vercel)', desc: 'Next.js 15 • Real-time dashboards • Interactive visualizations' },
-              { icon: '⚙️', title: 'Backend (Render)', desc: 'Ollama • Docker • Persistent storage • Auto-scaling' },
-              { icon: '🧠', title: 'AI Models', desc: 'Deepseek-R1 (70B) • Qwen2.5 (72B) • Gemma 2 (27B)' },
-              { icon: '📊', title: 'Analysis Engine', desc: 'Shannon entropy • Mutual information • Information bottlenecks' },
-            ].map((item, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '1.5rem' }}>
-                <div style={{ fontSize: '2rem' }}>{item.icon}</div>
-                <div>
-                  <h3 style={{ fontWeight: 'bold', color: '#00ff00' }}>{item.title}</h3>
-                  <p style={{ fontSize: '0.875rem', color: '#a0a0a0' }}>{item.desc}</p>
-                </div>
+              { name: 'Seed', price: 'R89', features: ['Starter website', '5GB storage', 'Basic support', 'Monthly updates'], color: '#7FFFD4' },
+              { name: 'Sprout', price: 'R144', features: ['Enhanced website', '20GB storage', 'Priority support', 'Analytics dashboard', 'SEO optimization'], color: '#FF00FF', popular: true },
+              { name: 'Bloom', price: 'R233', features: ['Premium website', '50GB storage', '24/7 support', 'Advanced analytics', 'Email marketing'], color: '#3CB371' },
+            ].map((tier) => (
+              <div
+                key={tier.name}
+                style={{
+                  backgroundColor: '#0A0F2C',
+                  border: `2px solid ${tier.color}`,
+                  padding: '2rem',
+                  borderRadius: '12px',
+                  transform: tier.popular ? 'scale(1.05)' : 'scale(1)',
+                  boxShadow: tier.popular ? `0 0 30px ${tier.color}44` : 'none',
+                }}
+              >
+                {tier.popular && <div style={{ color: tier.color, fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>⭐ POPULAR</div>}
+                <h4 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: tier.color }}>{tier.name}</h4>
+                <p style={{ fontSize: '2.25rem', color: tier.color, marginBottom: '1rem', fontWeight: 'bold' }}>{tier.price}<span style={{ fontSize: '1rem', color: '#888' }}>/month</span></p>
+                <ul style={{ fontSize: '0.95rem', lineHeight: '1.8', marginBottom: '1.5rem', color: '#D0D0D0' }}>
+                  {tier.features.map((feature) => (
+                    <li key={feature}>✓ {feature}</li>
+                  ))}
+                </ul>
+                <button
+                  style={{
+                    width: '100%',
+                    backgroundColor: tier.color,
+                    color: '#0A0F2C',
+                    padding: '0.75rem 1rem',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    transition: 'all 150ms ease-out',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLButtonElement;
+                    el.style.opacity = '0.9';
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLButtonElement;
+                    el.style.opacity = '1';
+                  }}
+                >
+                  Choose {tier.name}
+                </button>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        <div style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#00d4ff', marginBottom: '1.5rem' }}>
-            Ready to Analyze?
-          </h2>
-          <a
-            href="/dashboard"
+      {/* Portfolio Section */}
+      <section id="portfolio" style={{ padding: '6rem 2rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h3 style={{ fontSize: '2.8rem', marginBottom: '3rem', textAlign: 'center', color: '#FFFFFF' }}>
+            Portfolio Showcase
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+            {[
+              { title: 'Artisan Bakery Co.', type: 'Food & Beverage', desc: 'E-commerce with online ordering and menu showcase', color: '#FF00FF' },
+              { title: 'Luminous Hair Studio', type: 'Beauty & Wellness', desc: 'Booking system with stylist profiles and reviews', color: '#00FFFF' },
+              { title: 'Strategic Growth Consulting', type: 'Professional Services', desc: 'Portfolio showcase with case studies and lead capture', color: '#7FFFD4' },
+              { title: 'Zenith Fitness Hub', type: 'Health & Fitness', desc: 'Class scheduling and membership tier management', color: '#3CB371' },
+            ].map((item) => (
+              <div
+                key={item.title}
+                style={{
+                  backgroundColor: '#0F1438',
+                  border: `1px solid ${item.color}`,
+                  borderRadius: '12px',
+                  padding: '2rem',
+                  transition: 'all 300ms ease-out',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.transform = 'translateY(-8px)';
+                  el.style.boxShadow = `0 8px 25px ${item.color}44`;
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.transform = 'translateY(0)';
+                  el.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ width: '100%', height: '150px', backgroundColor: `${item.color}15`, borderRadius: '8px', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${item.color}30` }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '2.25rem', fontWeight: 'bold', color: item.color, marginBottom: '0.5rem' }}>{item.title[0]}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#888' }}>Website Preview</div>
+                  </div>
+                </div>
+                <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: item.color }}>{item.title}</h4>
+                <p style={{ fontSize: '0.875rem', color: '#888', marginBottom: '1rem' }}>{item.type}</p>
+                <p style={{ fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1rem' }}>{item.desc}</p>
+                <button
+                  style={{
+                    width: '100%',
+                    backgroundColor: item.color,
+                    color: '#0A0F2C',
+                    padding: '0.75rem 1rem',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  View Case Study
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Upsells Section */}
+      <section style={{ padding: '6rem 2rem', background: '#0F1438' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h3 style={{ fontSize: '2.8rem', marginBottom: '3rem', textAlign: 'center', color: '#FFFFFF' }}>
+            Premium AI-Powered Add-Ons
+          </h3>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+            {[
+              { name: 'FLA Agentic Swarm', icon: '⚙️', price: 'R499', desc: 'Financial, Legal & Advisory Intelligence', color: '#FF00FF' },
+              { name: 'Harmonic Render App', icon: '🎨', price: 'R299', desc: 'Sacred Geometry Visualization Engine', color: '#00FFFF' },
+              { name: 'Marine App', icon: '🌊', price: 'R199', desc: 'Oceanic Data & Sustainability Insights', color: '#7FFFD4' },
+              { name: 'Predictive I-Ching Chess', icon: '♟️', price: 'R349', desc: 'Ancient Wisdom Meets Strategic Analysis', color: '#3CB371' },
+            ].map((product) => (
+              <div
+                key={product.name}
+                style={{
+                  backgroundColor: '#0A0F2C',
+                  border: `2px solid ${product.color}`,
+                  borderRadius: '12px',
+                  padding: '2rem',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>{product.icon}</div>
+                <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: product.color }}>{product.name}</h4>
+                <p style={{ fontSize: '0.875rem', color: '#888', marginBottom: '1rem' }}>{product.desc}</p>
+                <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: product.color, marginBottom: '1rem' }}>{product.price}/month</p>
+                <button
+                  style={{
+                    width: '100%',
+                    backgroundColor: product.color,
+                    color: '#0A0F2C',
+                    padding: '0.75rem 1rem',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Add to Your Site
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section id="contact" style={{ padding: '6rem 2rem' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <h3 style={{ fontSize: '2.8rem', marginBottom: '3rem', textAlign: 'center', color: '#FFFFFF' }}>
+            Get Your Site Built
+          </h3>
+
+          <form
+            onSubmit={handleFormSubmit}
             style={{
-              display: 'inline-block',
-              padding: '1rem 2.5rem',
-              background: '#00d4ff',
-              color: '#000',
-              fontWeight: 'bold',
-              borderRadius: '0.5rem',
-              textDecoration: 'none',
-              cursor: 'pointer',
-              fontSize: '1.125rem',
-              transition: 'background 0.3s',
+              backgroundColor: '#0F1438',
+              padding: '2rem',
+              borderRadius: '12px',
+              border: `1px solid rgba(127, 255, 212, 0.3)`,
             }}
           >
-            Open Dashboard →
-          </a>
-        </div>
-      </main>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#7FFFD4' }}>Name</label>
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleFormChange}
+                placeholder="Your name"
+                style={{
+                  width: '100%',
+                  backgroundColor: '#0A0F2C',
+                  color: '#FFFFFF',
+                  border: `1px solid rgba(127, 255, 212, 0.3)`,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                }}
+                required
+              />
+            </div>
 
-      <footer style={{ borderTop: '1px solid #444', marginTop: '5rem', padding: '2rem' }}>
-        <div style={{ maxWidth: '80rem', margin: '0 auto', textAlign: 'center', color: '#808080', fontSize: '0.875rem' }}>
-          <p>
-            Existon 1.0 • Gaia-Vedic-Akasha-SOL-001 • Lily Code Architecture
-          </p>
-          <p style={{ marginTop: '0.5rem' }}>
-            <a
-              href="https://github.com/Lily-lotus2/Gaia-Vedic-Akasha-SOL-001"
-              style={{ color: '#00d4ff', textDecoration: 'none' }}
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#7FFFD4' }}>Email</label>
+              <input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleFormChange}
+                placeholder="your@email.com"
+                style={{
+                  width: '100%',
+                  backgroundColor: '#0A0F2C',
+                  color: '#FFFFFF',
+                  border: `1px solid rgba(127, 255, 212, 0.3)`,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                }}
+                required
+              />
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#7FFFD4' }}>Business Name</label>
+              <input
+                name="businessName"
+                value={formData.businessName}
+                onChange={handleFormChange}
+                placeholder="Your business name"
+                style={{
+                  width: '100%',
+                  backgroundColor: '#0A0F2C',
+                  color: '#FFFFFF',
+                  border: `1px solid rgba(127, 255, 212, 0.3)`,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                }}
+                required
+              />
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#7FFFD4' }}>Message</label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleFormChange}
+                placeholder="Tell us about your business..."
+                style={{
+                  width: '100%',
+                  backgroundColor: '#0A0F2C',
+                  color: '#FFFFFF',
+                  border: `1px solid rgba(127, 255, 212, 0.3)`,
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  minHeight: '120px',
+                  fontFamily: 'inherit',
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                backgroundColor: '#FF00FF',
+                color: '#0A0F2C',
+                padding: '0.75rem 1rem',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                transition: 'all 150ms ease-out',
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLButtonElement;
+                el.style.opacity = '0.9';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLButtonElement;
+                el.style.opacity = '1';
+              }}
             >
-              GitHub Repository
-            </a>
-          </p>
+              Submit
+            </button>
+          </form>
         </div>
+      </section>
+
+      {/* Funding/Sponsorship Section */}
+      <section style={{ padding: '6rem 2rem', background: 'linear-gradient(135deg, rgba(255, 0, 255, 0.05), rgba(0, 255, 255, 0.05))' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '2.8rem', marginBottom: '2rem', color: '#FFFFFF' }}>
+            Funding & Sponsorship Opportunity
+          </h3>
+          <p style={{ fontSize: '1.125rem', marginBottom: '2rem', color: '#D0D0D0', lineHeight: '1.8' }}>
+            Caramel Digital Studio is building the future of harmonically designed, sacred-geometry-infused websites for local small businesses. We're seeking funding and sponsorship to scale our impact and bring affordable, beautiful digital presence to underserved communities.
+          </p>
+          <button
+            style={{
+              backgroundColor: '#00FFFF',
+              color: '#0A0F2C',
+              padding: '1rem 2rem',
+              fontSize: '1.125rem',
+              fontWeight: 'bold',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'all 150ms ease-out',
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLButtonElement;
+              el.style.opacity = '0.9';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLButtonElement;
+              el.style.opacity = '1';
+            }}
+          >
+            Discuss Sponsorship
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ borderTop: '1px solid rgba(127, 255, 212, 0.3)', padding: '2rem', textAlign: 'center', color: '#888', fontSize: '0.875rem' }}>
+        <p>© 2026 Caramel Digital Studio. All rights reserved.</p>
+        <p style={{ marginTop: '0.5rem' }}>Crafted with harmonic precision and sacred geometry.</p>
       </footer>
     </div>
   );
